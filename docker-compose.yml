@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  client-api:
+    build: ClientAPI
+    container_name: ClientAPI
+    ports:
+      - "5000:5000"
+  port-domain-service:
+    build: PortDomainService
+    container_name: PortDomainService
+    ports:
+      - "5001:5001"
+  elasticsearch:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:7.10.0"
+    container_name: elasticsearch
+    environment:
+      - node.name=elasticsearch
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
