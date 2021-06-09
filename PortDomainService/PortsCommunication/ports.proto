@@ -24,7 +24,7 @@ service Ports {
     repeated double coordinates = 7;
     string province = 8;
     string timezone = 9;
-    string unlocs = 10;
+    repeated string unlocs = 10;
     string code = 11;
   }
 
