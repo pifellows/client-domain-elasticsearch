@@ -13,7 +13,15 @@ import (
 	"syscall"
 )
 
+var esClient ElasticsearchCommunication
+
 func main() {
+	esClient = ElasticsearchCommunication{}
+	err := esClient.Initalise("http://localhost:9200", "ports", 100)
+	if err != nil {
+		log.Fatalf("failed to connect to elasticsearch: %v", err)
+	}
+
 	// create PortService listener
 	listener, err := net.Listen("tcp", fmt.Sprintf("localhost:5001"))
 	if err != nil {
