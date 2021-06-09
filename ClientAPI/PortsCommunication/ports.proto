@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option go_package = "client-domain-elasticsearch/Ports";
+
+package ports;
+
+// Interface exported by the server.
+service Ports {
+  rpc GetPort(PortID) returns (Port) {}
+  rpc StreamPorts(stream Port) returns (Summary) {}
+}
+
+  message PortID {
+    string id = 1;
+  }
+
+  message Port {
+    string id = 1;
+    string name = 2;
+    string city = 3;
+    string country = 4;
+    repeated string alias = 5;
+    repeated string regions = 6;
+    repeated double coordinates = 7;
+    string province = 8;
+    string timezone = 9;
+    repeated string unlocs = 10;
+    string code = 11;
+  }
+
+  message Summary {
+      int32 Total = 1;
+      int32 Failed = 2;
+    }
