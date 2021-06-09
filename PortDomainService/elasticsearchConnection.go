@@ -18,7 +18,7 @@ type ElasticsearchCommunication struct {
 
 // Initalise the ElasticsearchCommunication structure to set the elasticsearch host, index name and batch size
 func (c *ElasticsearchCommunication) Initalise(host string, index string, batchSize int) error {
-	client, err := elastic.NewClient(elastic.SetURL(host), elastic.SetSniff(false))
+	client, err := elastic.NewSimpleClient(elastic.SetURL(host), elastic.SetSniff(false))
 	if err != nil {
 		return err
 	}
@@ -34,7 +34,7 @@ func (c *ElasticsearchCommunication) GetPort(ctx context.Context, id string) (*P
 	match := elastic.NewMatchQuery("id", id)
 	response, err := c.client.Search(c.indexName).Query(match).Do(ctx)
 	if err != nil {
-		return &Ports.Port{}, nil
+		return &Ports.Port{}, err
 	}
 
 	if response.TotalHits() > 0 {
