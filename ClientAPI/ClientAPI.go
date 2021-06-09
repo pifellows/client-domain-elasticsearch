@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"flag"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -12,7 +13,26 @@ import (
 	"time"
 )
 
+var portsClient pb.PortsClient
+
+var filePath string
+
 func main() {
+	var domainServiceHost string
+	flag.StringVar(&domainServiceHost, "domainservice", "localhost:5001", "hostname and port of the PortDomainService of the form 'localhost:5001'")
+	flag.StringVar(&filePath, "file", "", "location of the file to parse when the 'start' endpoint is called")
+	flag.Parse()
+
+	// set up GRPC client
+	opts := []grpc.DialOption{grpc.WithInsecure(), grpc.WithBlock()}
+	grpcConnection, err := grpc.Dial(domainServiceHost, opts...)
+	if err != nil {
+		log.Fatal("failed to dial domain service:", err)
+	}
+
+	portsClient = pb.NewPortsClient(grpcConnection)
+
+	// set up HTTP server
 	router := gin.Default()
 	router.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "Client API")
