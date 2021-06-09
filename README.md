@@ -38,3 +38,4 @@ The solution is missing several features that should be considered best practice
 - sufficient logging
 - unit tests for features, especially the JsonChunkReader which is isolated enough to test fully
 - healthcheck endpoints so that they can be hosted in various environments
+- docker compose does not work as expected. Elastcsearch takes a certain amount of time to load and as a result, the DomainService fails to connect due to there being no "retry" logic. Changing the elasticsearch client to a "SimpleClient" may improve this but it is currently untested.
