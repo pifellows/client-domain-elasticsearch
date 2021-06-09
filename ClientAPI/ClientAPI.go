@@ -5,12 +5,15 @@ import (
 	"errors"
 	"flag"
 	"github.com/gin-gonic/gin"
+	"google.golang.org/grpc"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	pb "client-domain-elasticsearch/ClientAPI/PortsCommunication"
 )
 
 var portsClient pb.PortsClient
@@ -37,6 +40,8 @@ func main() {
 	router.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "Client API")
 	})
+	router.GET("/getport", GetPort)
+	router.GET("/start", StartImport)
 
 	srv := &http.Server{
 		Addr:    ":5000",
