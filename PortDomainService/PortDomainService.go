@@ -3,6 +3,7 @@ package main
 import (
 	pb "client-domain-elasticsearch/PortsCommunication/PortsCommunication"
 	"errors"
+	"flag"
 	"fmt"
 	"google.golang.org/grpc"
 	"log"
@@ -16,14 +17,20 @@ import (
 var esClient ElasticsearchCommunication
 
 func main() {
+	var elasticsearchHost string
+	var indexname string
+	flag.StringVar(&elasticsearchHost, "es", "http://localhost:9200", "hostname and port of the elasticsearch service of the form 'http://localhost:9200'")
+	flag.StringVar(&indexname, "index", "ports", "name of the index to search and index to")
+	flag.Parse()
+
 	esClient = ElasticsearchCommunication{}
-	err := esClient.Initalise("http://localhost:9200", "ports", 100)
+	err := esClient.Initalise(elasticsearchHost, indexname, 100)
 	if err != nil {
 		log.Fatalf("failed to connect to elasticsearch: %v", err)
 	}
 
 	// create PortService listener
-	listener, err := net.Listen("tcp", fmt.Sprintf("localhost:5001"))
+	listener, err := net.Listen("tcp", fmt.Sprintf(":5001"))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
